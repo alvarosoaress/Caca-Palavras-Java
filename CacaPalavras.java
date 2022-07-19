@@ -18,8 +18,8 @@ public class CacaPalavras {
         }
     }
 
-    // Verificando se o numero para o indice I e indice J
-    // já foram sorteados anteriormente, para evitar uma palavra sobrepor a outra na matriz final
+    // Verificando se o numero para o indice I e indice J já foram sorteados
+    // anteriormente, para evitar uma palavra sobrepor a outra na matriz final
     public static int contem(int aux, int tamanhoVetor, ArrayList repetidos) {
 
         if (repetidos.contains(aux)) { // usando .contains no arraylist dos indices
@@ -50,16 +50,21 @@ public class CacaPalavras {
         char caca[][] = new char[10][10]; // caça palavras aleatorias
         String words[] = {"cara", "lousa", "xadrez", "casa", "brabo"}; // palavras escolhidas
 
-        for (i = 0; i < caca.length; i++) { // formando o caça palavras com palavras aleatorias em maíusculo
+        // formando o caça palavras com palavras aleatorias maíusculo
+        for (i = 0; i < caca.length; i++) {
             for (j = 0; j < caca[0].length; j++) {
+                //
                 char c = (char) (rand.nextInt(26) + 'a');
                 caca[i][j] = Character.toUpperCase(c);
 
             }
         }
-        while (k < words.length) { // colocando as palavras escolhidas no meio das aleatorias em posições aleatórias
 
-            // atribuindo um valor aleátorio e, ao mesmo tempo, verificando se esse valor já foi sorteado anteriormente
+        // colocando as palavras escolhidas no meio das aleatorias em posições aleatórias
+        while (k < words.length) {
+
+            // atribuindo um valor aleátorio e, ao mesmo tempo, verificando se esse valor já foi
+            // sorteado anteriormente
             aux = contem(ver(words[k].length()), words[k].length(), repetidosI);
             aux2 = contem(ver(words[k].length()), words[k].length(), repetidosJ);
             repetidosI.add(aux);
@@ -78,8 +83,10 @@ public class CacaPalavras {
         // for para imprimir os numeros de colunas, imprimir o J "em cima"
         for (j = 0; j < caca[0].length; j++) {
             if (!executado) {
-                System.out.printf("\t"); // espaço atras da primeira coluna para a formatação ficar certa
-                executado = true; // transformando executado em true para não ter esse espaço mais de uma vez
+                // espaço atras da primeira coluna para a formatação ficar certa
+                System.out.printf("\t");
+                // transformando executado em true para não ter esse espaço mais de uma vez
+                executado = true;
             }
             System.out.printf("{%d}\t", j + 1); // imprimindo os numeros das colunas
         }
