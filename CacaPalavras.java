@@ -1,10 +1,28 @@
 package CacaPalavras;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
+import java.io.IOException;
+
+
 
 public class CacaPalavras {
+
+    public final static void clearConsole() {
+        try {
+            final String os = System.getProperty("os.name");
+
+            if (os.contains("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                System.out.print("\033[H\033[2J");
+            }
+        } catch (final Exception e) {
+            // Handle any exceptions.
+        }
+    }
 
     public static int ver(int num2) { // VERificar se o numero gerado aleatoriamente comporta o
         // tanto de caracteres da palavra escolhida
@@ -31,7 +49,7 @@ public class CacaPalavras {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, InterruptedException {
         Scanner input = new Scanner(System.in);
         Random rand = new Random();
 
@@ -40,12 +58,17 @@ public class CacaPalavras {
         int k = 0;
         int aux = 0;
         int aux2 = 0;
+        int acerto = 0;
 
         // Lista de array para estocar os numeros já sorteados para I
         ArrayList<Integer> repetidosI = new ArrayList<Integer>();
 
         // Lista de array para estocar os numeros já sorteados para J
         ArrayList<Integer> repetidosJ = new ArrayList<Integer>();
+
+        String palavras[] = new String[5];
+
+        String resposta;
 
         char caca[][] = new char[10][10]; // caça palavras aleatorias
         String words[] = {"cara", "lousa", "xadrez", "casa", "brabo"}; // palavras escolhidas
@@ -60,11 +83,12 @@ public class CacaPalavras {
             }
         }
 
-        // colocando as palavras escolhidas no meio das aleatorias em posições aleatórias
+        // colocando as palavras escolhidas no meio das aleatorias em posições
+        // aleatórias
         while (k < words.length) {
 
-            // atribuindo um valor aleátorio e, ao mesmo tempo, verificando se esse valor já foi
-            // sorteado anteriormente
+            // atribuindo um valor aleátorio e, ao mesmo tempo, verificando se esse valor
+            // já foi sorteado anteriormente
             aux = contem(ver(words[k].length()), words[k].length(), repetidosI);
             aux2 = contem(ver(words[k].length()), words[k].length(), repetidosJ);
             repetidosI.add(aux);
@@ -74,6 +98,7 @@ public class CacaPalavras {
                 caca[aux][j + aux2] = words[k].charAt(j); // colocando em posições aleatórias
                 // adicionando o "J+" ao valor do indice J para a palavrar ser impressa cada
                 // caracter em cada posição de J horizontalmente
+                palavras[k] = (words[k]);
             }
             k++;
         }
@@ -100,6 +125,33 @@ public class CacaPalavras {
             }
             System.out.println(" ");
         }
+
+        while (acerto != words.length) {
+            try {
+                resposta = input.nextLine();
+                // "cara", "lousa", "xadrez", "casa", "brabo"
+
+                int coe = repetidosJ.get(Arrays.asList(palavras).indexOf(resposta));
+                for (j = coe; j < (coe + words[Arrays.asList(palavras).indexOf(resposta)].length()); j++) {
+                    caca[repetidosI.get(Arrays.asList(palavras).indexOf(resposta))][j] = '*';
+                }
+
+                clearConsole();
+
+                for (i = 0; i < caca.length; i++) { // printando a matriz pronta
+                    System.out.printf("{%d}\t", i + 1); // imprimindo o os números das linhas
+                    for (j = 0; j < caca[0].length; j++) {
+                        System.out.printf(" %c\t", caca[i][j]); // imprimindo o conteúdo final da
+                                                                // matriz
+                    }
+                    System.out.println(" ");
+                }
+                acerto++;
+            } catch (IndexOutOfBoundsException nException) {
+                System.out.println("Fora do Index");
+            }
+        }
+
 
     }
 }
