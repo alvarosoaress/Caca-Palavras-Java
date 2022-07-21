@@ -2,10 +2,10 @@ package CacaPalavras;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 import java.io.IOException;
-
 
 public class CacaPalavras {
 
@@ -37,23 +37,25 @@ public class CacaPalavras {
 
     // Verificando se o numero para o indice I e indice J já foram sorteados
     // anteriormente, para evitar uma palavra sobrepor a outra na matriz final
-    public static int contem(int aux, int tamanhoVetor, ArrayList repetidos, int uso) {
-        Random random = new Random();
+    public static int contem(int aux, int tamanhoVetor, ArrayList repetidos) {
         if (repetidos.contains(aux)) { // usando .contains no arraylist dos indices
-            if (uso == 1) {
-                aux = ver(tamanhoVetor);
-                return contem(aux, tamanhoVetor, repetidos, uso);
-            } // Caso já tenha sorteado, irá sortear
-            // outra, até vir uma nova}
-            else {
-                aux = random.nextInt(89);
-                return contem(aux, tamanhoVetor, repetidos, uso);
-            }
+            aux = ver(tamanhoVetor);
+            return contem(aux, tamanhoVetor, repetidos);
+            // Caso já tenha sorteado, irá sortear outra, até vir uma nova
         } else {
             return aux;
         }
     }
 
+    public static int repetido(int aux, ArrayList repetidos) {
+        Random random = new Random();
+        if (repetidos.contains(aux)) { // usando .contains no arraylist dos indices
+            aux = random.nextInt(89);
+            return repetido(aux, repetidos);
+        } else {
+            return aux;
+        }
+    }
 
     public static void main(String[] args) throws IOException, InterruptedException {
         Scanner input = new Scanner(System.in);
@@ -68,6 +70,8 @@ public class CacaPalavras {
         ArrayList<Integer> repetidosJ = new ArrayList<Integer>();
 
         ArrayList<Integer> repetidosPosicao = new ArrayList<>();
+
+        ArrayList<String> palavrasEcontradas = new ArrayList<String>();
 
         String palavras[] = new String[5];
 
@@ -99,13 +103,13 @@ public class CacaPalavras {
         // colocando as palavras escolhidas no meio das aleatorias em posições
         // aleatórias
         while (k < numPalavras) {
-            int posicao = contem(rand.nextInt(89), 89, repetidosPosicao, 0);
+            int posicao = repetido(rand.nextInt(89), repetidosPosicao);
             repetidosPosicao.add(posicao);
             // atribuindo um valor aleátorio e, ao mesmo tempo, verificando se esse valor
             // já foi sorteado anteriormente
 
-            aux = contem(ver(words[posicao].length()), words[posicao].length(), repetidosI, 1);
-            aux2 = contem(ver(words[posicao].length()), words[posicao].length(), repetidosJ, 1);
+            aux = contem(ver(words[posicao].length()), words[posicao].length(), repetidosI);
+            aux2 = contem(ver(words[posicao].length()), words[posicao].length(), repetidosJ);
             repetidosI.add(aux);
             repetidosJ.add(aux2);
 
@@ -118,53 +122,54 @@ public class CacaPalavras {
             k++;
         }
         while (acerto != numPalavras) {
-            if(chances <= 0){
+            if (chances <= 0) {
                 clearConsole();
                 System.out.println("Você Perdeu !");
                 break;
             }
 
-
-        for (i = 0; i < caca.length; i++) { // printando a matriz pronta
-            System.out.printf("{%d}\t", i + 1); // imprimindo o os números das linhas
-            for (j = 0; j < caca[0].length; j++) {
-                System.out.printf(" %c\t", caca[i][j]); // imprimindo o conteúdo final da matriz
-            }
-            System.out.println(" ");
-        }
-        try {
-            boolean executado = false; // verificação se já foi executado X parte do código
-    
-            // for para imprimir os numeros de colunas, imprimir o J "em cima"
-            for (j = 0; j < caca[0].length; j++) {
-                if (!executado) {
-                    // espaço atras da primeira coluna para a formatação ficar certa
-                    System.out.printf("\t");
-                    // transformando executado em true para não ter esse espaço mais de uma vez
-                    executado = true;
+            for (i = 0; i < caca.length; i++) { // printando a matriz pronta
+                System.out.printf("{%d}\t", i + 1); // imprimindo o os números das linhas
+                for (j = 0; j < caca[0].length; j++) {
+                    System.out.printf(" %c\t", caca[i][j]); // imprimindo o conteúdo final da matriz
                 }
-                System.out.printf("{%d}\t", j + 1); // imprimindo os numeros das colunas
+                System.out.println(" ");
             }
-    
-            System.out.println(" "); // espaço entre os numeros e a matriz
-                System.out.println("Chances restantes: "+chances);
-                System.out.println(Arrays.toString(palavras));
+            try {
+                boolean executado = false; // verificação se já foi executado X parte do código
+                j = 0;
+                // for para imprimir os numeros de colunas, imprimir o J "em cima"
+                for (j = 0; j < caca[0].length; j++) {
+                    if (!executado) {
+                        // espaço atras da primeira coluna para a formatação ficar certa
+                        System.out.printf("\t");
+                        // transformando executado em true para não ter esse espaço mais de uma vez
+                        executado = true;
+                    }
+                    System.out.printf("{%d}\t", j + 1); // imprimindo os numeros das colunas
+                }
+
+                System.out.println(" "); // espaço entre os numeros e a matriz
+                System.out.println("Chances restantes: " + chances);
+                System.out.println("Palavras encontradas :" + palavrasEcontradas.toString());
                 System.out.println("-----------------------------------------");
                 System.out.println("Digite a palavra que você encontrar: ");
                 resposta = input.nextLine();
 
                 int indiceJ = repetidosJ.get(Arrays.asList(palavras).indexOf(resposta));
 
-                for (j = indiceJ; j < (indiceJ + words[Arrays.asList(palavras).indexOf(resposta)].length()); j++) {
+                for (j = indiceJ; j < (indiceJ
+                        + palavras[Arrays.asList(palavras).indexOf(resposta)].length()); j++) {
                     caca[repetidosI.get(Arrays.asList(palavras).indexOf(resposta))][j] = '*';
                 }
 
                 clearConsole();
                 acerto++;
+                palavrasEcontradas.add(resposta);
             } catch (IndexOutOfBoundsException nException) {
                 System.out.println("Palavra nao se encontra no Caça-Palavras !");
                 chances--;
-                for(i=0;i<40;i++){
+                for (i = 0; i < 40; i++) {
                     System.out.print(".");
                     Thread.sleep(50);
                 }
@@ -175,6 +180,7 @@ public class CacaPalavras {
     }
 }
 
-//BUGS : 1 NUMERO ALEATORIO AS VEZES DA STACK OVERFLOW
-//       2 AS VEZES O SCAN N RECONHESE A PALAVRA MSM ELA ESTANDO NA MATRIZ E TIRA 1 CHANCE, PORÉM, ELA É "BORRADA" DA MATRIZ
-//       3 OS "*" NÃO ESTÃO COBRINDO A PALAVRA INTEIRA
+// BUGS : 1 NUMERO ALEATORIO AS VEZES DA STACK OVERFLOW
+// 2 AS VEZES O SCAN N RECONHESE A PALAVRA MSM ELA ESTANDO NA MATRIZ E TIRA 1
+// CHANCE, PORÉM, ELA É "BORRADA" DA MATRIZ
+// 3 OS "*" NÃO ESTÃO COBRINDO A PALAVRA INTEIRA
