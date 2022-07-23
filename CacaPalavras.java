@@ -95,8 +95,8 @@ public class CacaPalavras {
             for (j = 0; j < caca[0].length; j++) {
                 //
                 char c = (char) (rand.nextInt(26) + 'a');
-                caca[i][j] = Character.toUpperCase(c);
-
+                //caca[i][j] = Character.toUpperCase(c);
+                caca[i][j] = c;
             }
         }
 
@@ -179,8 +179,3 @@ public class CacaPalavras {
 
     }
 }
-
-// BUGS : 1 NUMERO ALEATORIO AS VEZES DA STACK OVERFLOW
-// 2 AS VEZES O SCAN N RECONHESE A PALAVRA MSM ELA ESTANDO NA MATRIZ E TIRA 1
-// CHANCE, PORÉM, ELA É "BORRADA" DA MATRIZ
-// 3 OS "*" NÃO ESTÃO COBRINDO A PALAVRA INTEIRA
